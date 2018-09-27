@@ -7,10 +7,12 @@ verify_ssl = true
 
 [packages]
 
+python-telegram-bot = "*"
 
 
 [dev-packages]
 
+pytest = "*"
 
 
 [requires]
