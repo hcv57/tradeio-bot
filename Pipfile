@@ -14,7 +14,6 @@ requests = "*"
 [dev-packages]
 
 pytest = "*"
-mock = "*"
 
 
 [requires]
