@@ -1,15 +1,9 @@
-import json
 import tradeiobot.api
 import tradeiobot.config
-from tradeiobot.cache import cache
 
-def load_marketdata():
-    return json.loads(tradeiobot.api.load_marketdata())
-
-@cache("MARKETDATA", tradeiobot.config.CACHE_FOR_SECONDS)
 def get_instruments():
-    data = load_marketdata()
-    return {d["instrument"].upper() : d for d in data}
+    data = tradeiobot.api.load_marketdata()
+    return {d["instrument"].upper(): d for d in data}
 
 def get_instrument(instrument):
     return get_instruments().get(instrument, {})
@@ -37,4 +31,4 @@ def convert_currency(amount, from_, to):
     except KeyError:
         instrument_name = to + "_" + from_
         instrument = get_instrument(instrument_name)
-        return amount / instrument["close"]
+        return amount / instrument["close"] #FIXME close of 0 will cause a crash

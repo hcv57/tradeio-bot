@@ -1,18 +1,10 @@
-import json
 import os
-import pytest
-import requests
-
-
-from unittest.mock import MagicMock
-
-# mock.side_eff
-
+import json
 
 def setup_module():
     os.environ["TELEGRAM_TOKEN"] = "t0ken"
-    requests.get = MagicMock()
-    requests.get.side_effect = [load_test_data()]
+    import tradeiobot.api
+    tradeiobot.api.load_marketdata = lambda: json.loads(load_test_data())
 
 def teardown_module():
     os.environ["TELEGRAM_TOKEN"] = ""
@@ -27,10 +19,12 @@ def test_get_instruments():
     instruments = get_instruments()
     assert len(instruments.keys()) == 35
 
+
 def test_get_instrument():
     from tradeiobot.markets import get_instrument
     instrument = get_instrument("LTC_BTC")
     assert instrument["low"] == 0.00879323
+
 
 def test_get_exchange_volumes():
     from tradeiobot.markets import get_exchange_volumes
@@ -40,6 +34,7 @@ def test_get_exchange_volumes():
     assert int(volumes["ETH"]) == 173
     assert int(volumes["TIO"]) == 354420
     assert int(volumes["USDT"]) == 106295
+
 
 def test_get_total_volume():
     from tradeiobot.markets import get_total_volume
