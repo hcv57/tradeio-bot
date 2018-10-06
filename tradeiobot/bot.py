@@ -88,11 +88,12 @@ def about_handler(bot, update):
     update.message.reply_markdown("\n".join([
         "*About Trade.io Bot (unofficial)*\n",
         "*Version:* 0.1, 2018-10-06",
+        "*Commit:* {commit}",
         "*License:* MIT",
         "",
         "_Contributions welcome!_",
         "https://github.com/hcv57/tradeio-bot"
-    ]), reply_markup=get_common_keyboard())
+    ]).format(commit=tradeiobot.config.COMMIT), reply_markup=get_common_keyboard())
 
 
 @tradeiobot.stats.track
