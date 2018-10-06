@@ -24,10 +24,10 @@ def start_handler(bot, update):
     update.message.reply_html("\n".join([
         "<b>Welcome to the Trade.io Bot (unofficial)</b>\n",
         "The following commands are currently available:\n",
-        "/markets - list the Trade.io exchange instruments",
-        "/volume - display the 24h exchange volume",
-        "/about - info about this bot such as its git repository",
-        "/stats - usage stats for this bot"
+        "/markets - lists all instruments",
+        "/volume - displays exchange volume",
+        "/about - shows additional bot info",
+        "/stats - presents usage statistics"
     ]), reply_markup=get_common_keyboard())
 
 
