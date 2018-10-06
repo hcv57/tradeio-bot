@@ -79,7 +79,7 @@ def instrument_handler(bot, update, groups):
         "*Close:* {close:f} {to} ({close_usdt:,.2f} USDT)",
         "*High:* {high:f} {to} ({high_usdt:,.2f} USDT)",
         "*Low:* {low:f} {to} ({low_usdt:,.2f} USDT)",
-        "*Volume:* {volume:f} {from_} ({volume_usdt:,.2f} USDT)",
+        "*Volume:* {volume:f} {from_}",
     ]).format(**instrument, from_=from_, to=to), reply_markup=get_common_keyboard())
 
 

@@ -16,9 +16,9 @@ def get_instrument(instrument_name, enrich=False):
             if k in ["open", "close", "high", "low"]:
                 key = "{}_usdt".format(k)
                 enriched_instrument[key] = convert_currency(v, to, "USDT")
-        enriched_instrument["volume_usdt"] = convert_currency(
-            instrument["volume"], from_, "USDT"
-        )
+        # enriched_instrument["volume_usdt"] = convert_currency(
+        #     instrument["volume"], from_, "USDT"
+        # )
     return enriched_instrument
 
 
