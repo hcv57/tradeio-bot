@@ -16,7 +16,7 @@ def get_common_keyboard():
     return ReplyKeyboardMarkup([
         [KeyboardButton('/markets 📈'), KeyboardButton('/volume 💰')],
         [KeyboardButton('/about ℹ'), KeyboardButton('/stats 📊')]
-    ])
+    ], resize_keyboard=True)
 
 
 @tradeiobot.stats.track
