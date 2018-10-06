@@ -101,7 +101,9 @@ def about_handler(bot, update):
         "",
         "_Contributions welcome!_",
         "https://github.com/hcv57/tradeio-bot"
-    ]).format(commit=tradeiobot.config.COMMIT), reply_markup=get_common_keyboard())
+    ]).format(
+        commit=tradeiobot.config.COMMIT
+    ), reply_markup=get_common_keyboard(), disable_web_page_preview=True)
 
 
 @tradeiobot.stats.track
