@@ -76,13 +76,19 @@ def instrument_handler(bot, update, groups):
     instrument = tradeiobot.markets.get_instrument(instrument_name, enrich=True)
     from_, to = instrument_name.split("_")
     update.message.reply_markdown("\n".join([
-        "*{} Market*\n".format(instrument_name),
+        "*{instrument_name} Market* {trend_symbol}\n",
         "*Open:* {open:f} {to} ({open_usdt:,.2f} USDT)",
         "*Close:* {close:f} {to} ({close_usdt:,.2f} USDT)",
         "*High:* {high:f} {to} ({high_usdt:,.2f} USDT)",
         "*Low:* {low:f} {to} ({low_usdt:,.2f} USDT)",
         "*Volume:* {volume:f} {from_}",
-    ]).format(**instrument, from_=from_, to=to), reply_markup=get_common_keyboard())
+    ]).format(
+        **instrument,
+        instrument_name=instrument_name,
+        trend_symbol=get_trend_symbol(instrument),
+        from_=from_,
+        to=to
+    ), reply_markup=get_common_keyboard())
 
 
 @tradeiobot.stats.track
