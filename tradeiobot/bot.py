@@ -65,7 +65,7 @@ def volume_handler(bot, update):
         "*24h Exchange Volume*\n",
         "{volume:,.2f} USDT",
         "",
-        "Note: The calculation is based on the Exchange's USDT markets for BTC, ETH and TIO.",
+        "Note: For the USDT conversion of all instruments the calculation is based on the Exchange's USDT markets for BTC, ETH and TIO.",
         config.SPONSOR_MESSAGE
     ]).format(volume=volume), reply_markup=get_common_keyboard())
 
