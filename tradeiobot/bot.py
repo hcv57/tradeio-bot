@@ -28,7 +28,7 @@ def start_handler(bot, update):
         "/markets - List of all instruments",
         "/volume - 24h exchange volume",
         "/token - Trade token stats",
-        "/about - Usage stats and additional bot info"
+        "/about - Usage stats and additional info"
     ]), reply_markup=get_common_keyboard())
 
 
