@@ -3,6 +3,7 @@ import logging
 import tradeiobot.config as config
 import tradeiobot.markets
 import tradeiobot.stats
+import tradeiobot.token
 from telegram import KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, RegexHandler
 
@@ -15,7 +16,7 @@ logging.basicConfig(
 def get_common_keyboard():
     return ReplyKeyboardMarkup([
         [KeyboardButton('/markets 📈'), KeyboardButton('/volume 💰')],
-        [KeyboardButton('/about ℹ'), KeyboardButton('/stats 📊')]
+        [KeyboardButton('/token 💎'), KeyboardButton('/about ℹ')]
     ], resize_keyboard=True)
 
 
@@ -94,29 +95,43 @@ def instrument_handler(bot, update, groups):
 @tradeiobot.stats.track
 def about_handler(bot, update):
     update.message.reply_markdown("\n".join([
-        "*About Trade.io Bot (unofficial)*\n",
-        "*Version:* 0.1, 2018-10-06",
+        "*Trade.io Bot (unoffical)*",
+        "",
+        "*Uptime:* {uptime:0>8}",
+        "*Requests served:* {hits}",
+        "*Unique users:* {users}",
+        "",
+        "*Version:* 0.2, 2018-10-08",
         "*Commit:* {commit}",
         "*License:* MIT",
         "",
         "_Contributions welcome!_",
         "https://github.com/hcv57/tradeio-bot"
     ]).format(
+        uptime=str(datetime.timedelta(seconds=tradeiobot.stats.get_uptime())),
+        hits=tradeiobot.stats.get_hits(),
+        users=tradeiobot.stats.get_unique_users(),
         commit=tradeiobot.config.COMMIT
     ), reply_markup=get_common_keyboard(), disable_web_page_preview=True)
 
 
 @tradeiobot.stats.track
-def stats_handler(bot, update):
+def token_handler(bot, update):
     update.message.reply_markdown("\n".join([
-        "*Trade.io Bot Usage Stats*\n",
-        "*Uptime:* {uptime:0>8}",
-        "*Requests served:* {hits}",
-        "*Unique users:* {users}"
+        "*Trade Token (TIO) on CMC*",
+        "",
+        "*Price:* {price_usd:,.4f} USD",
+        "*24h volume:* {volume_24h_usd:,.2f} USD",
+        "*Marketcap:* {market_cap_usd:,.2f} USD",
+        "",
+        "*Circulating supply:* {circulating_supply:,.0f} TIO",
+        "*Total supply:* {total_supply:,.0f} TIO",
+        "",
+        "*Rank:* {rank}",
+        "",
+        "_Source: https://coinmarketcap.com/currencies/trade-token_"
     ]).format(
-        uptime=str(datetime.timedelta(seconds=tradeiobot.stats.get_uptime())),
-        hits=tradeiobot.stats.get_hits(),
-        users=tradeiobot.stats.get_unique_users()
+        **tradeiobot.token.load_token_ticker()
     ), reply_markup=get_common_keyboard())
 
 

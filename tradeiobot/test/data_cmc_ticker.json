@@ -1,0 +1,27 @@
+{
+    "data": {
+        "id": 2373,
+        "name": "Trade Token",
+        "symbol": "TIO",
+        "website_slug": "trade-token",
+        "rank": 245,
+        "circulating_supply": 89921436.0,
+        "total_supply": 223534823.0,
+        "max_supply": null,
+        "quotes": {
+            "USD": {
+                "price": 0.1831727524,
+                "volume_24h": 34985.2977132928,
+                "market_cap": 16471157.0,
+                "percent_change_1h": 1.27,
+                "percent_change_24h": -2.49,
+                "percent_change_7d": -3.9
+            }
+        },
+        "last_updated": 1538983834
+    },
+    "metadata": {
+        "timestamp": 1538983232,
+        "error": null
+    }
+}
