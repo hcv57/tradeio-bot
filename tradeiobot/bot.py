@@ -25,10 +25,10 @@ def start_handler(bot, update):
     update.message.reply_html("\n".join([
         "<b>Welcome to the Trade.io Bot (unofficial)</b>\n",
         "The following commands are currently available:\n",
-        "/markets - lists all instruments",
-        "/volume - displays exchange volume",
-        "/about - shows additional bot info",
-        "/stats - presents usage statistics"
+        "/markets - List of all instruments",
+        "/volume - 24h exchange volume",
+        "/token - Trade token stats",
+        "/about - Usage stats and additional bot info"
     ]), reply_markup=get_common_keyboard())
 
 
@@ -136,12 +136,13 @@ def token_handler(bot, update):
 
 
 def start():
+    pass
     updater = Updater(config.TELEGRAM_TOKEN)
     updater.dispatcher.add_handler(CommandHandler('start', start_handler))
     updater.dispatcher.add_handler(CommandHandler('markets', markets_handler))
     updater.dispatcher.add_handler(CommandHandler('volume', volume_handler))
+    updater.dispatcher.add_handler(CommandHandler('token', token_handler))
     updater.dispatcher.add_handler(CommandHandler('about', about_handler))
-    updater.dispatcher.add_handler(CommandHandler('stats', stats_handler))
     updater.dispatcher.add_handler(RegexHandler('/([A-Z]+_[A-Z]+)', instrument_handler, pass_groups=True))
     updater.start_polling()
     updater.idle()
