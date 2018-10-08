@@ -86,7 +86,7 @@ def volume_handler(bot, update):
 def instrument_handler(bot, update, groups):
     instrument_name = groups[0]  # groups comes from the regex used by the handler
     from_, to = instrument_name.split("_")
-    instrument = tradeiobot.markets.get_instrument(instrument_name, enrich=to != "USDT")
+    instrument = tradeiobot.markets.get_instrument(instrument_name, enrich=True)
     precision = get_precision_for_currency(to)
     show_usdt = lambda k: "" if to == "USDT" else " ({%s:,.2f} USDT)" % k
     update.message.reply_markdown("\n".join([
@@ -95,7 +95,7 @@ def instrument_handler(bot, update, groups):
         "*Close:* {close:." + precision + "f} {to}" + show_usdt("close_usdt"),
         "*High:* {high:." + precision + "f} {to}" + show_usdt("high_usdt"),
         "*Low:* {low:." + precision + "f} {to}" + show_usdt("low_usdt"),
-        "*Volume:* {volume:f} {from_}",
+        "*Volume:* {volume:f} {from_} ({volume_usdt:.2f} USDT)",
     ]).format(
         **instrument,
         instrument_name=instrument_name,
