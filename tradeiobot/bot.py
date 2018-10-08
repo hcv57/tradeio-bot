@@ -42,7 +42,7 @@ def markets_handler(bot, update):
         if not last_market_from or not market.startswith(last_market_from):
             response_buffer.append("\n<b>{} markets</b>".format(from_))
         last_market_from = from_
-        precision = "4" if to == "USDT" else "8"
+        precision = get_precision_for_currency(to)
         response_buffer.append(
             (
                 "{trend_symbol} /{market} "
@@ -56,6 +56,8 @@ def markets_handler(bot, update):
         )
     update.message.reply_html("\n".join(response_buffer), reply_markup=get_common_keyboard())
 
+def get_precision_for_currency(to):
+    return "4" if to == "USDT" else "8"
 
 def get_trend_symbol(instrument):
     opening = instrument["open"]
@@ -83,14 +85,16 @@ def volume_handler(bot, update):
 @tradeiobot.stats.track
 def instrument_handler(bot, update, groups):
     instrument_name = groups[0]  # groups comes from the regex used by the handler
-    instrument = tradeiobot.markets.get_instrument(instrument_name, enrich=True)
     from_, to = instrument_name.split("_")
+    instrument = tradeiobot.markets.get_instrument(instrument_name, enrich=to != "USDT")
+    precision = get_precision_for_currency(to)
+    show_usdt = lambda k: "" if to == "USDT" else " ({%s:,.2f} USDT)" % k
     update.message.reply_markdown("\n".join([
         "*{instrument_name} Market* {trend_symbol}\n",
-        "*Open:* {open:.8f} {to} ({open_usdt:,.2f} USDT)",
-        "*Close:* {close:.8f} {to} ({close_usdt:,.2f} USDT)",
-        "*High:* {high:.8f} {to} ({high_usdt:,.2f} USDT)",
-        "*Low:* {low:.8f} {to} ({low_usdt:,.2f} USDT)",
+        "*Open:* {open:." + precision + "f} {to}" + show_usdt("open_usdt"),
+        "*Close:* {close:." + precision + "f} {to}" + show_usdt("close_usdt"),
+        "*High:* {high:." + precision + "f} {to}" + show_usdt("high_usdt"),
+        "*Low:* {low:." + precision + "f} {to}" + show_usdt("low_usdt"),
         "*Volume:* {volume:f} {from_}",
     ]).format(
         **instrument,
