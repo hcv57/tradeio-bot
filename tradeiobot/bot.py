@@ -42,9 +42,18 @@ def markets_handler(bot, update):
         if not last_market_from or not market.startswith(last_market_from):
             response_buffer.append("\n<b>{} markets</b>".format(from_))
         last_market_from = from_
-        response_buffer.append("{trend_symbol} /{market} {close:f} {to}".format(
-            trend_symbol=get_trend_symbol(instruments[market]),
-            market=market, close=instruments[market]["close"], to=to))
+        precision = "4" if to == "USDT" else "8"
+        response_buffer.append(
+            (
+                "{trend_symbol} /{market} "
+                "{close:." + precision + "f} {to}"
+            ).format(
+                trend_symbol=get_trend_symbol(instruments[market]),
+                market=market,
+                close=instruments[market]["close"],
+                to=to
+            )
+        )
     update.message.reply_html("\n".join(response_buffer), reply_markup=get_common_keyboard())
 
 
@@ -78,10 +87,10 @@ def instrument_handler(bot, update, groups):
     from_, to = instrument_name.split("_")
     update.message.reply_markdown("\n".join([
         "*{instrument_name} Market* {trend_symbol}\n",
-        "*Open:* {open:f} {to} ({open_usdt:,.2f} USDT)",
-        "*Close:* {close:f} {to} ({close_usdt:,.2f} USDT)",
-        "*High:* {high:f} {to} ({high_usdt:,.2f} USDT)",
-        "*Low:* {low:f} {to} ({low_usdt:,.2f} USDT)",
+        "*Open:* {open:.8f} {to} ({open_usdt:,.2f} USDT)",
+        "*Close:* {close:.8f} {to} ({close_usdt:,.2f} USDT)",
+        "*High:* {high:.8f} {to} ({high_usdt:,.2f} USDT)",
+        "*Low:* {low:.8f} {to} ({low_usdt:,.2f} USDT)",
         "*Volume:* {volume:f} {from_}",
     ]).format(
         **instrument,
