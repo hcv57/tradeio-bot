@@ -9,6 +9,7 @@ verify_ssl = true
 
 python-telegram-bot = "*"
 requests = "*"
+"beautifulsoup4" = "*"
 
 
 [dev-packages]

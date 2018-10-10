@@ -1,9 +1,11 @@
 import datetime
+import itertools
 import logging
 import tradeiobot.config as config
 import tradeiobot.markets
 import tradeiobot.stats
 import tradeiobot.token
+import tradeiobot.howsitcoming
 from telegram import KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, RegexHandler
 
@@ -16,7 +18,7 @@ logging.basicConfig(
 def get_common_keyboard():
     return ReplyKeyboardMarkup([
         [KeyboardButton('/markets 📈'), KeyboardButton('/volume 💰')],
-        [KeyboardButton('/token 💎'), KeyboardButton('/about ℹ')]
+        [KeyboardButton('/token 💎'), KeyboardButton('/progress 🚦'),  KeyboardButton('/about ℹ')]
     ], resize_keyboard=True)
 
 
@@ -28,6 +30,7 @@ def start_handler(bot, update):
         "/markets - List of all instruments",
         "/volume - 24h exchange volume",
         "/token - Trade token stats",
+        "/progress - Trade.io progress tracker",
         "/about - Usage stats and additional info"
     ]), reply_markup=get_common_keyboard())
 
@@ -114,7 +117,7 @@ def about_handler(bot, update):
         "*Requests served:* {hits}",
         "*Unique users:* {users}",
         "",
-        "*Version:* 0.2, 2018-10-08",
+        "*Version:* 0.3, 2018-10-10",
         "*Commit:* {commit}",
         "*License:* MIT",
         "",
@@ -147,6 +150,24 @@ def token_handler(bot, update):
         **tradeiobot.token.load_token_ticker()
     ), reply_markup=get_common_keyboard())
 
+@tradeiobot.stats.track
+def progress_handler(bot, update):
+    update.message.reply_markdown("\n".join(
+        itertools.chain(
+            ["*Trade.io Progress Tracker*"],
+            [""],
+            ["*Backlog*"],
+            map(lambda i: "▪ {}".format(i), tradeiobot.howsitcoming.load_backlog()),
+            [""],
+            ["*In progress*"],
+            map(lambda i: "▪ {}".format(i), tradeiobot.howsitcoming.load_in_progress()),
+            [""],
+            ["*Pending deployment*"],
+            map(lambda i: "▪ {}".format(i), tradeiobot.howsitcoming.load_pending_deployment()),
+            [""],
+            ["_Source: http://howsitcoming.trade.io_"]
+        )
+    ), reply_markup=get_common_keyboard())
 
 def start():
     pass
@@ -156,6 +177,7 @@ def start():
     updater.dispatcher.add_handler(CommandHandler('volume', volume_handler))
     updater.dispatcher.add_handler(CommandHandler('token', token_handler))
     updater.dispatcher.add_handler(CommandHandler('about', about_handler))
+    updater.dispatcher.add_handler(CommandHandler('progress', progress_handler))
     updater.dispatcher.add_handler(RegexHandler('/([A-Z]+_[A-Z]+)', instrument_handler, pass_groups=True))
     updater.start_polling()
     updater.idle()

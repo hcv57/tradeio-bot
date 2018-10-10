@@ -12,9 +12,13 @@ API_CMC_TIO_ID = "2373"
 API_CMC_ENDPOINT = "https://api.coinmarketcap.com/v2/ticker/{}/".format(API_CMC_TIO_ID)
 API_TRADEIO_ENDPOINT = "https://api.exchange.trade.io/marketdata-ws/24hr"
 
+# HOWSITCOMING
+HOWSITCOMING_URL = "https://howsitcoming.trade.io/"
+
 # Cache config
 API_TRADEIO_CACHE_FOR_SECONDS = 60
 API_CMC_CACHE_FOR_SECONDS = 180
+HOWSITCOMING_CACHE_FOR_SECONDS = 300
 
 # git commit hash
 try:
