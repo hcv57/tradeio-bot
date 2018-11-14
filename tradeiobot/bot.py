@@ -134,18 +134,19 @@ def about_handler(bot, update):
 @tradeiobot.stats.track
 def token_handler(bot, update):
     update.message.reply_markdown("\n".join([
-        "*Trade Token (TIO) on CMC*",
+        "*TIOx on CMC*",
         "",
-        "*Price:* {price_usd:,.4f} USD",
-        "*24h volume:* {volume_24h_usd:,.2f} USD",
-        "*Marketcap:* {market_cap_usd:,.2f} USD",
-        "",
-        "*Circulating supply:* {circulating_supply:,.0f} TIO",
-        "*Total supply:* {total_supply:,.0f} TIO",
-        "",
-        "*Rank:* {rank}",
-        "",
-        "_Source: https://coinmarketcap.com/currencies/trade-token_"
+        "_Currently not listed on CMS_"
+        # "*Price:* {price_usd:,.4f} USD",
+        # "*24h volume:* {volume_24h_usd:,.2f} USD",
+        # "*Marketcap:* {market_cap_usd:,.2f} USD",
+        # "",
+        # "*Circulating supply:* {circulating_supply:,.0f} TIO",
+        # "*Total supply:* {total_supply:,.0f} TIO",
+        # "",
+        # "*Rank:* {rank}",
+        # "",
+        # "_Source: https://coinmarketcap.com/currencies/trade-token_"
     ]).format(
         **tradeiobot.token.load_token_ticker()
     ), reply_markup=get_common_keyboard())

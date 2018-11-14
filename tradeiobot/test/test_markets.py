@@ -17,30 +17,30 @@ def load_test_data():
 def test_get_instruments():
     from tradeiobot.markets import get_instruments
     instruments = get_instruments()
-    assert len(instruments.keys()) == 35
+    assert len(instruments.keys()) == 47
 
 
 def test_get_instrument():
     from tradeiobot.markets import get_instrument
     instrument = get_instrument("LTC_BTC")
-    assert instrument["low"] == 0.00879323
+    assert instrument["low"] == 0.00774255
 
 
 def test_get_exchange_volumes():
     from tradeiobot.markets import get_exchange_volumes
     volumes = get_exchange_volumes()
     # FIXME rounding errors using floats for currency
-    assert int(volumes["BTC"]) == 9
-    assert int(volumes["ETH"]) == 173
-    assert int(volumes["TIO"]) == 354420
-    assert int(volumes["USDT"]) == 106295
+    assert int(volumes["BTC"]) == 6
+    assert int(volumes["ETH"]) == 282
+    assert int(volumes["TIOX"]) == 423052
+    assert int(volumes["USDT"]) == 94830
 
 
 def test_get_total_volume():
     from tradeiobot.markets import get_total_volume
     # FIXME rounding errors using floats for currency
     assert get_total_volume() == get_total_volume("USDT")
-    assert int(get_total_volume()) == 269661
-    assert int(get_total_volume("BTC")) == 40
-    assert int(get_total_volume("ETH")) == 1202
-    assert int(get_total_volume("TIO")) == 1530670
+    assert int(get_total_volume()) == 298916
+    assert int(get_total_volume("BTC")) == 45
+    assert int(get_total_volume("ETH")) == 1423
+    assert int(get_total_volume("TIOX")) == 1240373

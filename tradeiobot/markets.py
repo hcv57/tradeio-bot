@@ -25,7 +25,7 @@ def get_instrument(instrument_name, enrich=False):
 
 
 def get_exchange_volumes():
-    volumes = dict(BTC=0, ETH=0, TIO=0, USDT=0)
+    volumes = dict(BTC=0, ETH=0, TIOX=0, USDT=0)
     for k, v in get_instruments().items():
         currency = k.split("_")[1]
         volumes[currency] += v.get("volume") * v.get("close")
