@@ -148,7 +148,7 @@ def token_handler(bot, update):
         # "",
         # "_Source: https://coinmarketcap.com/currencies/trade-token_"
     ]).format(
-        **tradeiobot.token.load_token_ticker()
+        # **tradeiobot.token.load_token_ticker()
     ), reply_markup=get_common_keyboard())
 
 @tradeiobot.stats.track
