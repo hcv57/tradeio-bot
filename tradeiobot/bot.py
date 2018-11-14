@@ -136,7 +136,7 @@ def token_handler(bot, update):
     update.message.reply_markdown("\n".join([
         "*TIOx on CMC*",
         "",
-        "_Currently not listed on CMS_"
+        "_Currently not listed_"
         # "*Price:* {price_usd:,.4f} USD",
         # "*24h volume:* {volume_24h_usd:,.2f} USD",
         # "*Marketcap:* {market_cap_usd:,.2f} USD",
