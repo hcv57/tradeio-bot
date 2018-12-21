@@ -1,7 +1,7 @@
-import tradeiobot.api.cmc
+import tradeiobot.apis.cmc
 
 def load_token_ticker():
-    ticker = tradeiobot.api.cmc.load_token_ticker()
+    ticker = tradeiobot.apis.cmc.load_token_ticker()
     data = ticker["data"]
     usd_quotes = data["quotes"]["USD"]
     return dict(

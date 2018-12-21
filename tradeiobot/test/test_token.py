@@ -3,8 +3,8 @@ import json
 
 def setup_module():
     os.environ["TELEGRAM_TOKEN"] = "t0ken"
-    import tradeiobot.api.cmc
-    tradeiobot.api.cmc.load_token_ticker = lambda: json.loads(load_test_data())
+    import tradeiobot.apis.cmc
+    tradeiobot.apis.cmc.load_token_ticker = lambda: json.loads(load_test_data())
 
 def teardown_module():
     os.environ["TELEGRAM_TOKEN"] = ""

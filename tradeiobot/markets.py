@@ -1,9 +1,9 @@
-import tradeiobot.api.tradeio
+import tradeiobot.apis.tradeio
 import tradeiobot.config
 
 
 def get_instruments():
-    data = tradeiobot.api.tradeio.load_marketdata()
+    data = tradeiobot.apis.tradeio.load_marketdata()
     return {d["instrument"].upper(): d for d in data}
 
 
