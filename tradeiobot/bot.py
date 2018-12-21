@@ -31,7 +31,7 @@ def start_handler(bot, update):
         "The following commands are currently available:\n",
         "/markets - List of all instruments",
         "/volume - 24h exchange volume",
-        "/exchange - Trade.io exchange on CMC"
+        "/exchange - Trade.io on CMC",
         "/token - TIOx on CMC",
         "/progress - Trade.io progress tracker",
         "/about - Usage stats and additional info"
