@@ -8,7 +8,7 @@ if not TELEGRAM_TOKEN:
     raise ValueError('The environment variable TELEGRAM_TOKEN is not set.')
 
 # API Endpoints
-API_CMC_TIO_ID = "2373"
+API_CMC_TIO_ID = "3642"
 API_CMC_ENDPOINT = "https://api.coinmarketcap.com/v2/ticker/{}/".format(API_CMC_TIO_ID)
 API_TRADEIO_ENDPOINT = "https://api.exchange.trade.io/marketdata-ws/24hr"
 

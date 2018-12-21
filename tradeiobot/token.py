@@ -7,10 +7,10 @@ def load_token_ticker():
     return dict(
         name=data["name"],
         rank=data["rank"],
-        circulating_supply=data["circulating_supply"],
-        total_supply=data["total_supply"],
+        circulating_supply=data["circulating_supply"] or 0,
+        total_supply=data["total_supply"] or 0,
         price_usd=usd_quotes["price"],
         volume_24h_usd=usd_quotes["volume_24h"],
-        market_cap_usd=usd_quotes["market_cap"]
+        market_cap_usd=usd_quotes["market_cap"] or 0,
     )
 
