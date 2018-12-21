@@ -95,7 +95,9 @@ def exchange_handler(bot, update):
         "*Trade.io on CMC*",
         "",
         "*Rank:* {rank}",
-        "*Volume:* {volume:,.2f} USD"
+        "*Volume:* {volume:,.2f} USD",
+        "",
+        "_Source: https://coinmarketcap.com/exchanges/volume/24-hour_"
     ]).format(**tradeiobot.scrapers.cmc.load_cmc_data()), reply_markup=get_common_keyboard())
 
 
