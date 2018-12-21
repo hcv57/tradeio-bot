@@ -131,7 +131,7 @@ def about_handler(bot, update):
         "*Requests served:* {hits}",
         "*Unique users:* {users}",
         "",
-        "*Version:* 0.3, 2018-10-10",
+        "*Version:* 0.4, 2018-12-21",
         "*Commit:* {commit}",
         "*License:* MIT",
         "",
