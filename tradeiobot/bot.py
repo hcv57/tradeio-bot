@@ -5,7 +5,8 @@ import tradeiobot.config as config
 import tradeiobot.markets
 import tradeiobot.stats
 import tradeiobot.token
-import tradeiobot.howsitcoming
+import tradeiobot.scrapers.cmc
+import tradeiobot.scrapers.howsitcoming
 from telegram import KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, RegexHandler
 
@@ -16,8 +17,9 @@ logging.basicConfig(
 
 
 def get_common_keyboard():
+    # http://unicode.org/emoji/charts/full-emoji-list.html
     return ReplyKeyboardMarkup([
-        [KeyboardButton('/markets 📈'), KeyboardButton('/volume 💰')],
+        [KeyboardButton('/markets 📈'), KeyboardButton('/volume 💰'), KeyboardButton('/exchange 🚀')],
         [KeyboardButton('/token 💎'), KeyboardButton('/progress 🚦'),  KeyboardButton('/about ℹ')]
     ], resize_keyboard=True)
 
@@ -29,7 +31,8 @@ def start_handler(bot, update):
         "The following commands are currently available:\n",
         "/markets - List of all instruments",
         "/volume - 24h exchange volume",
-        "/token - Trade token stats",
+        "/exchange - Trade.io exchange on CMC"
+        "/token - TIOx on CMC",
         "/progress - Trade.io progress tracker",
         "/about - Usage stats and additional info"
     ]), reply_markup=get_common_keyboard())
@@ -83,6 +86,17 @@ def volume_handler(bot, update):
         "Note: For the USDT conversion of all instruments the calculation is based on the Exchange's USDT markets for BTC, ETH and TIO.",
         config.SPONSOR_MESSAGE
     ]).format(volume=volume), reply_markup=get_common_keyboard())
+
+
+@tradeiobot.stats.track
+def exchange_handler(bot, update):
+    volume = tradeiobot.markets.get_total_volume()
+    update.message.reply_markdown("\n".join([
+        "*Trade.io on CMC*",
+        "",
+        "*Rank:* {rank}",
+        "*Volume:* {volume:,.2f} USD"
+    ]).format(**tradeiobot.scrapers.cmc.load_cmc_data()), reply_markup=get_common_keyboard())
 
 
 @tradeiobot.stats.track
@@ -157,13 +171,13 @@ def progress_handler(bot, update):
             ["*Trade.io Progress Tracker*"],
             [""],
             ["*Backlog*"],
-            map(lambda i: "▪ {}".format(i), tradeiobot.howsitcoming.load_backlog()),
+            map(lambda i: "▪ {}".format(i), tradeiobot.scrapers.howsitcoming.load_backlog()),
             [""],
             ["*In progress*"],
-            map(lambda i: "▪ {}".format(i), tradeiobot.howsitcoming.load_in_progress()),
+            map(lambda i: "▪ {}".format(i), tradeiobot.scrapers.howsitcoming.load_in_progress()),
             [""],
             ["*Pending deployment*"],
-            map(lambda i: "▪ {}".format(i), tradeiobot.howsitcoming.load_pending_deployment()),
+            map(lambda i: "▪ {}".format(i), tradeiobot.scrapers.howsitcoming.load_pending_deployment()),
             [""],
             ["_Source: http://howsitcoming.trade.io_"]
         )
@@ -175,6 +189,7 @@ def start():
     updater.dispatcher.add_handler(CommandHandler('start', start_handler))
     updater.dispatcher.add_handler(CommandHandler('markets', markets_handler))
     updater.dispatcher.add_handler(CommandHandler('volume', volume_handler))
+    updater.dispatcher.add_handler(CommandHandler('exchange', exchange_handler))
     updater.dispatcher.add_handler(CommandHandler('token', token_handler))
     updater.dispatcher.add_handler(CommandHandler('about', about_handler))
     updater.dispatcher.add_handler(CommandHandler('progress', progress_handler))
