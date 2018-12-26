@@ -4,6 +4,7 @@ import logging
 import tradeiobot.config as config
 import tradeiobot.markets
 import tradeiobot.stats
+import tradeiobot.releasenotes
 import tradeiobot.token
 import tradeiobot.scrapers.cmc
 import tradeiobot.scrapers.howsitcoming
@@ -38,6 +39,7 @@ def start_handler(bot, update):
     ]), reply_markup=get_common_keyboard())
 
 
+@tradeiobot.releasenotes.showonce
 @tradeiobot.stats.track
 def markets_handler(bot, update):
     instruments = tradeiobot.markets.get_instruments()
@@ -76,6 +78,7 @@ def get_trend_symbol(instrument):
         return "➡"
 
 
+@tradeiobot.releasenotes.showonce
 @tradeiobot.stats.track
 def volume_handler(bot, update):
     volume = tradeiobot.markets.get_total_volume()
@@ -88,6 +91,7 @@ def volume_handler(bot, update):
     ]).format(volume=volume), reply_markup=get_common_keyboard())
 
 
+@tradeiobot.releasenotes.showonce
 @tradeiobot.stats.track
 def exchange_handler(bot, update):
     update.message.reply_markdown("\n".join([
@@ -100,6 +104,7 @@ def exchange_handler(bot, update):
     ]).format(**tradeiobot.scrapers.cmc.load_cmc_data()), reply_markup=get_common_keyboard())
 
 
+@tradeiobot.releasenotes.showonce
 @tradeiobot.stats.track
 def instrument_handler(bot, update, groups):
     instrument_name = groups[0]  # groups comes from the regex used by the handler
@@ -123,6 +128,7 @@ def instrument_handler(bot, update, groups):
     ), reply_markup=get_common_keyboard())
 
 
+@tradeiobot.releasenotes.showonce
 @tradeiobot.stats.track
 def about_handler(bot, update):
     update.message.reply_markdown("\n".join([
@@ -132,7 +138,7 @@ def about_handler(bot, update):
         "*Requests served:* {hits}",
         "*Unique users:* {users}",
         "",
-        "*Version:* 0.5, 2018-12-25",
+        "*Version:* {version}",
         "*Commit:* {commit}",
         "*License:* MIT",
         "",
@@ -142,10 +148,12 @@ def about_handler(bot, update):
         uptime=str(datetime.timedelta(seconds=tradeiobot.stats.get_uptime())),
         hits=tradeiobot.stats.get_hits(),
         users=tradeiobot.stats.get_unique_users(),
+        version=tradeiobot.config.VERSION,
         commit=tradeiobot.config.COMMIT
     ), reply_markup=get_common_keyboard(), disable_web_page_preview=True)
 
 
+@tradeiobot.releasenotes.showonce
 @tradeiobot.stats.track
 def token_handler(bot, update):
     update.message.reply_markdown("\n".join([
@@ -165,6 +173,7 @@ def token_handler(bot, update):
         **tradeiobot.token.load_token_ticker()
     ), reply_markup=get_common_keyboard())
 
+@tradeiobot.releasenotes.showonce
 @tradeiobot.stats.track
 def progress_handler(bot, update):
     update.message.reply_markdown("\n".join(

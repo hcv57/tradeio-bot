@@ -2,6 +2,8 @@ import os
 import subprocess
 import binascii
 
+VERSION = "0.6, 2018-12-25"
+
 # Telegram
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 if not TELEGRAM_TOKEN:
