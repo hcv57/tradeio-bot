@@ -49,4 +49,7 @@ def convert_currency(amount, from_, to):
     except KeyError:
         instrument_name = to + "_" + from_
         instrument = get_instrument(instrument_name)
-        return amount / instrument["close"]  # FIXME close of 0 will cause a crash
+        try:
+            return amount / instrument["close"]
+        except ZeroDivisionError:
+            return 0
