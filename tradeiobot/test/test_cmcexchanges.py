@@ -15,23 +15,14 @@ def teardown_module():
     os.environ["TELEGRAM_TOKEN"] = ""
 
 def test_load_howsitcoming_soup():
-    from tradeiobot.config import HOWSITCOMING_URL
-    from tradeiobot.scrapers.howsitcoming import _load_howsitcoming_soup
-    soup = _load_howsitcoming_soup()
-    requests.get.assert_called_once_with(HOWSITCOMING_URL)
+    from tradeiobot.config import CMC_EXCHANGEVOLUMES_URL
+    from tradeiobot.scrapers.cmc import _load_exchangevolumes_soup
+    soup = _load_exchangevolumes_soup()
+    requests.get.assert_called_once_with(CMC_EXCHANGEVOLUMES_URL)
     assert isinstance(soup, BeautifulSoup)
 
-def test_load_backlog():
-    from tradeiobot.scrapers.howsitcoming import load_backlog
-    items = load_backlog()
-    assert len(items) == 9
+def test_load_cmc_data():
+    from tradeiobot.scrapers.cmc import load_cmc_data
+    data = load_cmc_data()
+    assert data == {'rank': '119', 'volume': 693282.218976}
 
-def test_load_in_progress():
-    from tradeiobot.scrapers.howsitcoming import load_in_progress
-    items = load_in_progress()
-    assert len(items) == 6
-
-def test_load_pending_deployment():
-    from tradeiobot.scrapers.howsitcoming import load_pending_deployment
-    items = load_pending_deployment()
-    assert len(items) == 4
