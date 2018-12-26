@@ -83,14 +83,13 @@ def volume_handler(bot, update):
         "*24h Exchange Volume*\n",
         "{volume:,.2f} USDT",
         "",
-        "Note: For the USDT conversion of all instruments the calculation is based on the Exchange's USDT markets for BTC, ETH and TIO.",
+        "Note: For the USDT conversion of all instruments the calculation is based on the Exchange's USDT markets for BTC, ETH, TIOx and TUSD.",
         config.SPONSOR_MESSAGE
     ]).format(volume=volume), reply_markup=get_common_keyboard())
 
 
 @tradeiobot.stats.track
 def exchange_handler(bot, update):
-    volume = tradeiobot.markets.get_total_volume()
     update.message.reply_markdown("\n".join([
         "*Trade.io on CMC*",
         "",
@@ -133,7 +132,7 @@ def about_handler(bot, update):
         "*Requests served:* {hits}",
         "*Unique users:* {users}",
         "",
-        "*Version:* 0.4, 2018-12-21",
+        "*Version:* 0.5, 2018-12-25",
         "*Commit:* {commit}",
         "*License:* MIT",
         "",
