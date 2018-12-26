@@ -194,7 +194,6 @@ def progress_handler(bot, update):
     ), reply_markup=get_common_keyboard())
 
 def start():
-    pass
     updater = Updater(config.TELEGRAM_TOKEN)
     updater.dispatcher.add_handler(CommandHandler('start', start_handler))
     updater.dispatcher.add_handler(CommandHandler('markets', markets_handler))
