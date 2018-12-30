@@ -9,6 +9,10 @@ TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 if not TELEGRAM_TOKEN:
     raise ValueError('The environment variable TELEGRAM_TOKEN is not set.')
 
+# DB
+SQLITE_DB = "tradeiobot.db"
+SCHEMA = "tradeiobot/db/schema.json"
+
 # API Endpoints
 API_CMC_TIO_ID = "3642"
 API_CMC_ENDPOINT = "https://api.coinmarketcap.com/v2/ticker/{}/".format(API_CMC_TIO_ID)

@@ -1,6 +1,6 @@
 from functools import partial
 
-from tradeiobot.db.stores import memory, dynamo
+from tradeiobot.db.stores import memory, sqlite
 from tradeiobot.db.stores.abstractstore import AbstractStore
 
 def connect(drivers=[]):
@@ -8,7 +8,7 @@ def connect(drivers=[]):
     class Connection(object):
 
         def __init__(self, stores):
-            self.stores = stores or [memory, dynamo]
+            self.stores = stores or [memory, sqlite]
             assert all(lambda s: isinstance(s, AbstractStore) for s in self.stores)
 
         def __getattr__(self, item):
