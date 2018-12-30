@@ -1,14 +1,20 @@
 from tradeiobot.db.stores.abstractstore import AbstractStore
 
+
 class DynamoStore(AbstractStore):
 
     def __init__(self):
         self.store = {}
 
-    def set(self, key, value, next_store=None):
-        self.store[key] = value
-
-    def get(self, key, next_store=None):
+    def do_get(self, key):
         return self.store.get(key)
+
+    def do_set(self, key, value):
+        self.store[key] = value
+        return True
+
+    def do_delete(self, key):
+        del self.store[key]
+        return True
 
 store = DynamoStore()

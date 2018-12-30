@@ -21,7 +21,7 @@ def connect(drivers=[]):
             for store in reversed(object.__getattribute__(self, "stores")):
                 action = store.__getattribute__(item)
                 assert callable(action)
-                func = partial(action, next_store=func)
+                func = partial(action, next_store_action=func)
 
             return func
 

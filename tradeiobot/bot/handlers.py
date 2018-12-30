@@ -1,28 +1,14 @@
 import datetime
 import itertools
-import logging
-import tradeiobot.config as config
+
+import tradeiobot.config
 import tradeiobot.markets
-import tradeiobot.stats
 import tradeiobot.releasenotes
+import tradeiobot.scrapers
+import tradeiobot.stats
 import tradeiobot.token
-import tradeiobot.scrapers.cmc
-import tradeiobot.scrapers.howsitcoming
-from telegram import KeyboardButton, ReplyKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, RegexHandler
-
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
-
-
-def get_common_keyboard():
-    # http://unicode.org/emoji/charts/full-emoji-list.html
-    return ReplyKeyboardMarkup([
-        [KeyboardButton('/markets 📈'), KeyboardButton('/volume 💰'), KeyboardButton('/exchange 🚀')],
-        [KeyboardButton('/token 💎'), KeyboardButton('/progress 🚦'),  KeyboardButton('/about ℹ')]
-    ], resize_keyboard=True)
+from tradeiobot import config
+from tradeiobot.bot.keyboards import main_keyboard
 
 
 @tradeiobot.stats.track
@@ -36,7 +22,28 @@ def start_handler(bot, update):
         "/token - TIOx on CMC",
         "/progress - Trade.io progress tracker",
         "/about - Usage stats and additional info"
-    ]), reply_markup=get_common_keyboard())
+    ]), reply_markup=main_keyboard())
+
+
+@tradeiobot.releasenotes.showonce
+@tradeiobot.stats.track
+def progress_handler(bot, update):
+    update.message.reply_markdown("\n".join(
+        itertools.chain(
+            ["*Trade.io Progress Tracker*"],
+            [""],
+            ["*Backlog*"],
+            map(lambda i: "▪ {}".format(i), tradeiobot.scrapers.howsitcoming.load_backlog()),
+            [""],
+            ["*In progress*"],
+            map(lambda i: "▪ {}".format(i), tradeiobot.scrapers.howsitcoming.load_in_progress()),
+            [""],
+            ["*Pending deployment*"],
+            map(lambda i: "▪ {}".format(i), tradeiobot.scrapers.howsitcoming.load_pending_deployment()),
+            [""],
+            ["_Source: http://howsitcoming.trade.io_"]
+        )
+    ), reply_markup=main_keyboard())
 
 
 @tradeiobot.releasenotes.showonce
@@ -53,8 +60,8 @@ def markets_handler(bot, update):
         precision = get_precision_for_currency(to)
         response_buffer.append(
             (
-                "{trend_symbol} /{market} "
-                "{close:." + precision + "f} {to}"
+                    "{trend_symbol} /{market} "
+                    "{close:." + precision + "f} {to}"
             ).format(
                 trend_symbol=get_trend_symbol(instruments[market]),
                 market=market,
@@ -62,10 +69,12 @@ def markets_handler(bot, update):
                 to=to
             )
         )
-    update.message.reply_html("\n".join(response_buffer), reply_markup=get_common_keyboard())
+    update.message.reply_html("\n".join(response_buffer), reply_markup=main_keyboard())
+
 
 def get_precision_for_currency(to):
     return "4" if to == "USDT" else "8"
+
 
 def get_trend_symbol(instrument):
     opening = instrument["open"]
@@ -88,7 +97,7 @@ def volume_handler(bot, update):
         "",
         "Note: For the USDT conversion of all instruments the calculation is based on the Exchange's USDT markets for BTC, ETH, TIOx and TUSD.",
         config.SPONSOR_MESSAGE
-    ]).format(volume=volume), reply_markup=get_common_keyboard())
+    ]).format(volume=volume), reply_markup=main_keyboard())
 
 
 @tradeiobot.releasenotes.showonce
@@ -101,7 +110,7 @@ def exchange_handler(bot, update):
         "*Volume:* {volume:,.2f} USD",
         "",
         "_Source: https://coinmarketcap.com/exchanges/volume/24-hour_"
-    ]).format(**tradeiobot.scrapers.cmc.load_cmc_data()), reply_markup=get_common_keyboard())
+    ]).format(**tradeiobot.scrapers.cmc.load_cmc_data()), reply_markup=main_keyboard())
 
 
 @tradeiobot.releasenotes.showonce
@@ -125,7 +134,7 @@ def instrument_handler(bot, update, groups):
         trend_symbol=get_trend_symbol(instrument),
         from_=from_,
         to=to
-    ), reply_markup=get_common_keyboard())
+    ), reply_markup=main_keyboard())
 
 
 @tradeiobot.releasenotes.showonce
@@ -150,7 +159,7 @@ def about_handler(bot, update):
         users=tradeiobot.stats.get_unique_users(),
         version=tradeiobot.config.VERSION,
         commit=tradeiobot.config.COMMIT
-    ), reply_markup=get_common_keyboard(), disable_web_page_preview=True)
+    ), reply_markup=main_keyboard(), disable_web_page_preview=True)
 
 
 @tradeiobot.releasenotes.showonce
@@ -171,37 +180,4 @@ def token_handler(bot, update):
         "_Source: https://coinmarketcap.com/currencies/trade-token-x_"
     ]).format(
         **tradeiobot.token.load_token_ticker()
-    ), reply_markup=get_common_keyboard())
-
-@tradeiobot.releasenotes.showonce
-@tradeiobot.stats.track
-def progress_handler(bot, update):
-    update.message.reply_markdown("\n".join(
-        itertools.chain(
-            ["*Trade.io Progress Tracker*"],
-            [""],
-            ["*Backlog*"],
-            map(lambda i: "▪ {}".format(i), tradeiobot.scrapers.howsitcoming.load_backlog()),
-            [""],
-            ["*In progress*"],
-            map(lambda i: "▪ {}".format(i), tradeiobot.scrapers.howsitcoming.load_in_progress()),
-            [""],
-            ["*Pending deployment*"],
-            map(lambda i: "▪ {}".format(i), tradeiobot.scrapers.howsitcoming.load_pending_deployment()),
-            [""],
-            ["_Source: http://howsitcoming.trade.io_"]
-        )
-    ), reply_markup=get_common_keyboard())
-
-def start():
-    updater = Updater(config.TELEGRAM_TOKEN)
-    updater.dispatcher.add_handler(CommandHandler('start', start_handler))
-    updater.dispatcher.add_handler(CommandHandler('markets', markets_handler))
-    updater.dispatcher.add_handler(CommandHandler('volume', volume_handler))
-    updater.dispatcher.add_handler(CommandHandler('exchange', exchange_handler))
-    updater.dispatcher.add_handler(CommandHandler('token', token_handler))
-    updater.dispatcher.add_handler(CommandHandler('about', about_handler))
-    updater.dispatcher.add_handler(CommandHandler('progress', progress_handler))
-    updater.dispatcher.add_handler(RegexHandler('/([A-Z]+_[A-Z]+)', instrument_handler, pass_groups=True))
-    updater.start_polling()
-    updater.idle()
+    ), reply_markup=main_keyboard())
