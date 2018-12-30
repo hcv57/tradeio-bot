@@ -1,3 +1,5 @@
+import tradeiobot.bot.handlers
+
 users = set()
 
 def showonce(handler):
@@ -10,16 +12,9 @@ def showonce(handler):
             _handler = handler
         else:
             users.add(user)
-            _handler = releasenotes_handler
+            _handler = tradeiobot.bot.handlers.releasenotes_handler
         return _handler(*args, **kwargs)
 
     return wrapper
 
-
-def releasenotes_handler(bot, update):
-    with open("RELEASES") as f:
-        update.message.reply_markdown(
-            "*What's new?*\n\n" +
-            f.read()
-        )
 

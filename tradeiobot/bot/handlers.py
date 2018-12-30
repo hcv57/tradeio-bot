@@ -181,3 +181,11 @@ def token_handler(bot, update):
     ]).format(
         **tradeiobot.token.load_token_ticker()
     ), reply_markup=main_keyboard())
+
+
+def releasenotes_handler(bot, update):
+    with open("RELEASES") as f:
+        update.message.reply_markdown(
+            "*What's new?*\n\n" +
+            f.read()
+        )
