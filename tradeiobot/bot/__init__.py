@@ -14,6 +14,8 @@ def start():
         CommandHandler('token', tradeiobot.bot.handlers.token_handler),
         CommandHandler('about', tradeiobot.bot.handlers.about_handler),
         CommandHandler('progress', tradeiobot.bot.handlers.progress_handler),
+        CommandHandler('balance', tradeiobot.bot.handlers.balance_handler),
+        RegexHandler('^/api (\S+) (\S+)$', tradeiobot.bot.handlers.api_handler, pass_groups=True),
         RegexHandler('/([A-Z]+_[A-Z]+)', tradeiobot.bot.handlers.instrument_handler, pass_groups=True),
     ]
 

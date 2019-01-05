@@ -2,7 +2,7 @@ import os
 import subprocess
 import binascii
 
-VERSION = "0.7, 2018-12-25"
+VERSION = "0.8, 2019-01-05"
 
 # Telegram
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")

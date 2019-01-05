@@ -1,5 +1,8 @@
 import datetime
 import itertools
+import json
+
+from tradeioapi.api.trading import account_get
 
 import tradeiobot.config
 import tradeiobot.markets
@@ -9,6 +12,8 @@ import tradeiobot.stats
 import tradeiobot.token
 from tradeiobot import config
 from tradeiobot.bot.keyboards import main_keyboard
+
+from tradeiobot.db import connection
 
 
 @tradeiobot.stats.track
@@ -189,3 +194,49 @@ def releasenotes_handler(bot, update):
             "*What's new?*\n\n" +
             f.read()
         )
+
+@tradeiobot.releasenotes.showonce
+@tradeiobot.stats.track
+def balance_handler(bot, update):
+    key = connection.get(update.message.from_user.id, "api_key")
+    secret = connection.get(update.message.from_user.id, "api_secret")
+    if not key:
+        update.message.reply_markdown("\n".join([
+            "*API Access not configured*",
+            "",
+            "To activate API access please use",
+            "/api yourkey yoursecret"
+        ]), reply_markup=main_keyboard())
+    else:
+        account_response = account_get(key, secret)
+        if account_response.status_code != 200:
+            update.message.reply_markdown("\n".join([
+                "*Your Balance*",
+                "",
+                "Something went wrong.",
+                "Please ensure your api credentials are correct.",
+                "",
+                "/api yourkey yoursecret",
+            ]), reply_markup=main_keyboard())
+        else:
+            data = json.loads(account_response.text)
+            balances = []
+            for balance in sorted(data["balances"], key=lambda k: k['asset']):
+                if float(balance["available"]) > 0:
+                    balances.append(
+                        "*{: <6}* {:}".format(
+                            balance["asset"].upper(),
+                            balance["available"])
+                    )
+            update.message.reply_markdown("\n".join([
+                "*Your Balances*",
+                ""
+            ] + balances), reply_markup=main_keyboard())
+
+def api_handler(bot, update, groups):
+    key, secret = groups
+    connection.set(update.message.from_user.id, "api_key", key)
+    connection.set(update.message.from_user.id, "api_secret", secret)
+    update.message.reply_markdown("\n".join([
+        "*API settings saved*"
+    ]), reply_markup=main_keyboard())
