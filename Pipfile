@@ -11,6 +11,7 @@ python-telegram-bot = "*"
 requests = "*"
 "beautifulsoup4" = "*"
 "boto3" = "*"
+tradeioapi = {git = "https://github.com/hcv57/tradeio-api-python"}
 
 
 [dev-packages]
