@@ -26,3 +26,6 @@ def connect(drivers=[]):
             return func
 
     return Connection(drivers)
+
+
+connection = connect()

@@ -15,9 +15,10 @@ class AbstractStore(abc.ABC):
         values = self.do_get_all_as_dict(table)
         if not values:
             values = next_store_action(table)
-            for k, v in values:
-                self.do_set(table, k, v)
-        return values
+            if values:
+                for k, v in values:
+                    self.do_set(table, k, v)
+        return values or dict()
 
     def set(self, table, key, value, next_store_action):
         self.do_set(table, key, value)
