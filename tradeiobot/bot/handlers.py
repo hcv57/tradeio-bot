@@ -7,7 +7,7 @@ from tradeioapi.api.trading import account_get
 import tradeiobot.config
 import tradeiobot.markets
 import tradeiobot.releasenotes
-import tradeiobot.scrapers
+from tradeiobot.scrapers import cmc, howsitcoming
 import tradeiobot.stats
 import tradeiobot.token
 from tradeiobot import config
@@ -38,13 +38,13 @@ def progress_handler(bot, update):
             ["*Trade.io Progress Tracker*"],
             [""],
             ["*Backlog*"],
-            map(lambda i: "▪ {}".format(i), tradeiobot.scrapers.howsitcoming.load_backlog()),
+            map(lambda i: "▪ {}".format(i), howsitcoming.load_backlog()),
             [""],
             ["*In progress*"],
-            map(lambda i: "▪ {}".format(i), tradeiobot.scrapers.howsitcoming.load_in_progress()),
+            map(lambda i: "▪ {}".format(i), howsitcoming.load_in_progress()),
             [""],
             ["*Pending deployment*"],
-            map(lambda i: "▪ {}".format(i), tradeiobot.scrapers.howsitcoming.load_pending_deployment()),
+            map(lambda i: "▪ {}".format(i), howsitcoming.load_pending_deployment()),
             [""],
             ["_Source: http://howsitcoming.trade.io_"]
         )
@@ -115,7 +115,7 @@ def exchange_handler(bot, update):
         "*Volume:* {volume:,.2f} USD",
         "",
         "_Source: https://coinmarketcap.com/exchanges/volume/24-hour_"
-    ]).format(**tradeiobot.scrapers.cmc.load_cmc_data()), reply_markup=main_keyboard())
+    ]).format(**cmc.load_cmc_data()), reply_markup=main_keyboard())
 
 
 @tradeiobot.releasenotes.showonce
