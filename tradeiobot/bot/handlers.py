@@ -105,17 +105,32 @@ def volume_handler(bot, update):
     ]).format(volume=volume), reply_markup=main_keyboard())
 
 
+# @tradeiobot.releasenotes.showonce
+# @tradeiobot.stats.track
+# def exchange_handler(bot, update):
+#     update.message.reply_markdown("\n".join([
+#         "*Trade.io on CMC*",
+#         "",
+#         "*Rank:* {rank}",
+#         "*Volume:* {volume:,.2f} USD",
+#         "",
+#         "_Source: https://coinmarketcap.com/exchanges/volume/24-hour_"
+#     ]).format(**cmc.load_cmc_data()), reply_markup=main_keyboard())
+
 @tradeiobot.releasenotes.showonce
 @tradeiobot.stats.track
 def exchange_handler(bot, update):
     update.message.reply_markdown("\n".join([
         "*Trade.io on CMC*",
         "",
-        "*Rank:* {rank}",
-        "*Volume:* {volume:,.2f} USD",
+        "*Rank:* ?",
+        "*Volume:* ? USD",
+        "",
+        "This functionality has been disabled. It may be reenabled in the future "
+        "but will require bot users to provide their own CMC API keys.",
         "",
         "_Source: https://coinmarketcap.com/exchanges/volume/24-hour_"
-    ]).format(**cmc.load_cmc_data()), reply_markup=main_keyboard())
+    ]), reply_markup=main_keyboard())
 
 
 @tradeiobot.releasenotes.showonce
