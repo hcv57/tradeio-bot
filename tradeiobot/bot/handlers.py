@@ -10,6 +10,7 @@ import tradeiobot.releasenotes
 from tradeiobot.scrapers import cmc, howsitcoming
 import tradeiobot.stats
 import tradeiobot.token
+import tradeiobot.util
 from tradeiobot import config
 from tradeiobot.bot.keyboards import main_keyboard
 
@@ -243,10 +244,28 @@ def balance_handler(bot, update):
                             balance["asset"].upper(),
                             balance["available"])
                     )
+            changes = []
+            current_balances_as_dict = dict((d["asset"], d["available"]) for d in data["balances"])
+            balance_changes = tradeiobot.util.balance_changes(
+                current_balances_as_dict,
+                json.loads(connection.get(
+                    update.message.from_user.id,
+                    "previous_balance") or "{}"
+                )
+            )
+            connection.set(
+                update.message.from_user.id,
+                "previous_balance",
+                json.dumps(current_balances_as_dict)
+            )
+            if balance_changes:
+                changes.append("\n*Changes*\n")
+                for asset in sorted(balance_changes):
+                    changes.append("*{: <6}* {:.8f}".format(asset.upper(), balance_changes[asset]))
             update.message.reply_markdown("\n".join([
                 "*Your Balances*",
                 ""
-            ] + balances), reply_markup=main_keyboard())
+            ] + balances + changes), reply_markup=main_keyboard())
 
 def api_handler(bot, update, groups):
     key, secret = groups
